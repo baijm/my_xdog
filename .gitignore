@@ -1,2 +1,4 @@
 Debug/
-my_xdog/Debug
+x64/
+Win32/
+xdog_gui/Debug
