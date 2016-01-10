@@ -22,6 +22,7 @@ xdog_gui::xdog_gui(QWidget *parent)
 	sigmaSlider = new QSlider(Qt::Vertical);
 	sigmaSlider->setMinimum(0*slider_factor);
 	sigmaSlider->setMaximum(10*slider_factor);
+	sigmaSlider->setSingleStep(2);
 	sigmaSlider->setValue(param->getSigma()*slider_factor);
 	sigmaEdit = new QLineEdit(QString::number((1.0)*sigmaSlider->value()/slider_factor));
 	connect(sigmaSlider, SIGNAL(valueChanged(int)), this, SLOT(slideSigma(int)));
@@ -41,6 +42,7 @@ xdog_gui::xdog_gui(QWidget *parent)
 	tauSlider = new QSlider(Qt::Vertical);
 	tauSlider->setMinimum(0*slider_factor);
 	tauSlider->setMaximum(2*slider_factor);
+	tauSlider->setSingleStep(2);
 	tauSlider->setValue(param->getTau()*slider_factor);
 	tauEdit = new QLineEdit(QString::number((1.0)*tauSlider->value()/slider_factor));
 	connect(tauSlider, SIGNAL(valueChanged(int)), this, SLOT(slideTau(int)));
@@ -50,6 +52,7 @@ xdog_gui::xdog_gui(QWidget *parent)
 	epsilonSlider = new QSlider(Qt::Vertical);
 	epsilonSlider->setMinimum(-1*slider_factor);
 	epsilonSlider->setMaximum(1*slider_factor);
+	epsilonSlider->setSingleStep(2);
 	epsilonSlider->setValue(param->getEpsilon()*slider_factor);
 	epsilonEdit = new QLineEdit(QString::number((1.0)*epsilonSlider->value()/slider_factor));
 	connect(epsilonSlider, SIGNAL(valueChanged(int)), this, SLOT(slideEpsilon(int)));
@@ -59,6 +62,7 @@ xdog_gui::xdog_gui(QWidget *parent)
 	phiSlider = new QSlider(Qt::Vertical);
 	phiSlider->setMinimum(1);
 	phiSlider->setMaximum(100);
+	phiSlider->setSingleStep(10);
 	phiSlider->setValue(param->getPhi());
 	phiEdit = new QLineEdit(QString::number(phiSlider->value()));
 	connect(phiSlider, SIGNAL(valueChanged(int)), this, SLOT(slidePhi(int)));
@@ -136,9 +140,12 @@ void xdog_gui::processClicked()
 	compute_dog(src_mat, dog_mat, param);
 	// thresholding
 	threshold_dog(dog_mat, res_mat, param);
-
-	cv::Mat res_8u = res_mat*MAX_PIX_VAL;
+	// convert double ->[0, 255]
+	double th_min, th_max;
+	cv::minMaxIdx(res_mat, &th_min, &th_max);
+	cv::Mat res_8u = ((res_mat - th_min)/(th_max - th_min))*MAX_PIX_VAL;
 	res_8u.convertTo(res_8u, CV_8U);
+
 	cv::Mat res_rgb;
 	cv::cvtColor(res_8u, res_rgb, CV_GRAY2RGB);
 
@@ -278,7 +285,7 @@ void xdog_gui::updateParam()
 void xdog_gui::loadSrc()
 {
 	src_file = QFileDialog::getOpenFileName(this, tr("Open Source Image"),
-		".", tr("Image Files (*.png *.jpg *.bmp)"));
+		"./image/", tr("Image Files (*.png *.jpg *.bmp)"));
 	src_mat = cv::imread(src_file.toStdString());
 
 	cv::Mat rgb_mat;
