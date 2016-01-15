@@ -61,7 +61,7 @@ xdog_gui::xdog_gui(QWidget *parent)
 	phiLabel = new QLabel(tr("phi"));
 	phiSlider = new QSlider(Qt::Vertical);
 	phiSlider->setMinimum(1);
-	phiSlider->setMaximum(100);
+	phiSlider->setMaximum(1000);
 	phiSlider->setSingleStep(10);
 	phiSlider->setValue(param->getPhi());
 	phiEdit = new QLineEdit(QString::number(phiSlider->value()));
@@ -136,6 +136,16 @@ xdog_gui::~xdog_gui()
 // callback of push buttons
 void xdog_gui::processClicked()
 {
+	// compute DOG based on flow
+	//GetFDoG(src_im, etf, 1.0, 3.0, 0.99); // tao = 0.99
+	//int w = src_mat.cols, h = src_mat.rows;
+	//for int i=0; i<h; i++){
+	//	for(int j=0; j<w; j++){
+	//		dog_mat.at<uchar>(i, j) = src_im.p[i][j];
+	//	}
+	//}
+	//GrayThresholding(src_im, 0.7); // thres = 0.7
+
 	// compute DOG
 	compute_dog(src_mat, dog_mat, param);
 	// thresholding
@@ -312,6 +322,19 @@ void xdog_gui::loadSrc()
 	src_mat /= MAX_PIX_VAL;
 	dog_mat = cv::Mat::zeros(src_mat.size(), src_mat.type());
 	res_mat = cv::Mat::zeros(src_mat.size(), src_mat.type());
+
+	// FDOG
+	//int w = src_mat.cols, h = src_mat.rows;
+	//src_im = imatrix(h, w);
+	//for(int i=0; i<h; i++){
+	//	for(int j=0; j<w; j++){
+	//		src_im.p[i][j] = src_mat.at<uchar>(i,j);
+	//	}
+	//}
+	// create flow
+	//etf.init(src_im.getRow(), src_im.getCol());
+	//etf.set(src_im);
+	//etf.Smooth(4, 2);
 }
 
 void xdog_gui::loadTexture()

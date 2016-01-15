@@ -12,6 +12,11 @@
 #include "ui_xdog_gui.h"
 #include "xdog_data.h"
 
+#include "imatrix.h"
+#include "myvec.h"
+#include "ETF.h"
+#include "fdog.h"
+
 class xdog_gui : public QMainWindow
 {
 	Q_OBJECT
@@ -47,6 +52,9 @@ private:
 	QString src_file;
 	cv::Mat src_mat, dog_mat, res_mat; 
 	QImage srcQimg, resQimg;
+
+	imatrix src_im;
+	ETF etf;
 
 	void createActions();
 	void createMenu();

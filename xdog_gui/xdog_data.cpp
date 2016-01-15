@@ -4,11 +4,11 @@
 XDOG_param::XDOG_param()
 {
 	// standard deviation of Gaussian
-	sigma = 5;
+	sigma = 2;
 	// factor of standard deviations
 	k = 1.6;
 	// size of Gaussian
-	kernel_size = 15; 
+	kernel_size = 7; 
 	// relative weighting between Gaussians
 	tau = 1; 
 	// threshold
