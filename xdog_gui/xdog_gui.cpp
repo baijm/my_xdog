@@ -136,8 +136,7 @@ void xdog_gui::processClicked()
 	}
 	else{
 		// pure XDOG
-		src_mat /= MAX_PIX_VAL;
-		compute_dog(src_mat, dog_mat, param);
+		compute_dog(src_mat/MAX_PIX_VAL, dog_mat, param);
 	}
 
 	// thresholding
@@ -146,8 +145,9 @@ void xdog_gui::processClicked()
 	cv::minMaxIdx(res_mat, &th_min, &th_max);
 	res_mat = (res_mat - th_min)/(th_max - th_min);
 
-	cv::Mat res_rgb = rgb_mat.clone();
+	cv::Mat res_rgb;
 	if(curr_sel == COLOR_PASTEL){
+		res_rgb = rgb_mat.clone();
 		int nr = src_mat.rows;
 		int nc = src_mat.cols;
 		for(int r=0; r<nr; r++){
@@ -157,6 +157,11 @@ void xdog_gui::processClicked()
 				res_rgb.at<cv::Vec3b>(r, c)[2] *= res_mat.at<float>(r, c);
 			}
 		}
+	}
+	else{
+		cv::Mat res_8u = res_mat*MAX_PIX_VAL;
+		res_8u.convertTo(res_8u, CV_8U);
+		cv::cvtColor(res_8u, res_rgb, CV_GRAY2RGB);
 	}
 
 	resQimg = QImage((const unsigned char*)(res_rgb.data),
@@ -298,10 +303,6 @@ void xdog_gui::loadSrc()
 	//src_mat /= MAX_PIX_VAL;
 	dog_mat = cv::Mat::zeros(src_mat.size(), src_mat.type());
 	res_mat = cv::Mat::zeros(src_mat.size(), src_mat.type());
-}
-
-void xdog_gui::loadTexture()
-{
 }
 
 // menu : predefined params

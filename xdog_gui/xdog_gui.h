@@ -66,7 +66,6 @@ private:
 private slots:
 	// menu : file operation
 	void loadSrc();
-	void loadTexture();
 	// menu : predefined params
 	void setPencilShading();
 	void setCharcoal();
