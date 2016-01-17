@@ -26,7 +26,7 @@ public:
 	~xdog_gui();
 
 private:
-	enum selection{PENCIL_SHADING=1, CHARCOAL=2, PASTEL=3, THRESHOLD=4};
+	enum selection{PENCIL_SHADING=1, CHARCOAL=2, PASTEL=3, THRESHOLD=4, COLOR_PASTEL=5};
 	selection curr_sel;
 
 	// menu
@@ -52,7 +52,7 @@ private:
 	// global data
 	XDOG_param* param;
 	QString src_file;
-	cv::Mat src_mat, dog_mat, res_mat; 
+	cv::Mat src_mat, rgb_mat, dog_mat, res_mat; 
 	QImage srcQimg, resQimg;
 
 	imatrix src_im;

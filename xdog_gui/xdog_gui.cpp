@@ -142,15 +142,22 @@ void xdog_gui::processClicked()
 
 	// thresholding
 	threshold_dog(dog_mat, res_mat, param);
-
-	// convert double ->[0, 255]
 	double th_min, th_max;
 	cv::minMaxIdx(res_mat, &th_min, &th_max);
-	cv::Mat res_8u = ((res_mat - th_min)/(th_max - th_min))*MAX_PIX_VAL;
-	res_8u.convertTo(res_8u, CV_8U);
+	res_mat = (res_mat - th_min)/(th_max - th_min);
 
-	cv::Mat res_rgb;
-	cv::cvtColor(res_8u, res_rgb, CV_GRAY2RGB);
+	cv::Mat res_rgb = rgb_mat.clone();
+	if(curr_sel == COLOR_PASTEL){
+		int nr = src_mat.rows;
+		int nc = src_mat.cols;
+		for(int r=0; r<nr; r++){
+			for(int c=0; c<nc; c++){
+				res_rgb.at<cv::Vec3b>(r, c)[0] *= res_mat.at<float>(r, c);
+				res_rgb.at<cv::Vec3b>(r, c)[1] *= res_mat.at<float>(r, c);
+				res_rgb.at<cv::Vec3b>(r, c)[2] *= res_mat.at<float>(r, c);
+			}
+		}
+	}
 
 	resQimg = QImage((const unsigned char*)(res_rgb.data),
 		res_rgb.cols, res_rgb.rows,
@@ -264,22 +271,12 @@ void xdog_gui::loadSrc()
 		"./image/", tr("Image Files (*.png *.jpg *.bmp)"));
 	src_mat = cv::imread(src_file.toStdString());
 
-	cv::Mat rgb_mat;
-
-	if(src_mat.channels() == 3){
-		cv::cvtColor(src_mat, rgb_mat, CV_BGR2RGB);
-		srcQimg = QImage((const unsigned char*)(rgb_mat.data),
-			rgb_mat.cols, rgb_mat.rows,
-			rgb_mat.cols*rgb_mat.channels(),
-			QImage::Format_RGB888);
-	}
-	else{
-		srcQimg = QImage((const unsigned char*)(src_mat.data),
-			src_mat.cols, src_mat.rows,
-			src_mat.cols*src_mat.channels(),
-			QImage::Format_RGB888);
-	}
-
+	// display src
+	cv::cvtColor(src_mat, rgb_mat, CV_BGR2RGB);
+	srcQimg = QImage((const unsigned char*)(rgb_mat.data),
+		rgb_mat.cols, rgb_mat.rows,
+		rgb_mat.cols*rgb_mat.channels(),
+		QImage::Format_RGB888);
 	srcLabel->setPixmap(QPixmap::fromImage(srcQimg));
 	srcLabel->resize(srcLabel->pixmap()->size());
 
@@ -346,6 +343,14 @@ void xdog_gui::setPastel()
 
 void xdog_gui::setPastelColor()
 {
+	curr_sel = COLOR_PASTEL;
+	param->setSigma(5);
+	param->setKernelSz(15);
+	param->setTau(0.914);
+	param->setEpsilon(0.056);
+	param->setPhi(20);
+
+	updateParam();
 }
 
 void xdog_gui::setThresholding()
