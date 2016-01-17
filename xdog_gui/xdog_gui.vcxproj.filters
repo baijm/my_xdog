@@ -53,9 +53,6 @@
     <ClCompile Include="xdog_data.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="fdog_main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ETF.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -26,11 +26,13 @@ public:
 	~xdog_gui();
 
 private:
+	enum selection{PENCIL_SHADING=1, CHARCOAL=2, PASTEL=3, THRESHOLD=4};
+	selection curr_sel;
+
 	// menu
-	QAction *fileSrc, *fileTexture;
-	QAction *effAbstraction, *effIndication, *effSpeedLine, *effGhosting, *effNegativeEdge;
-	QAction *styPencilShading, *styCharcoal, *styPastel, *styPastelColor, *styThresholding, *styHatching;
-	QMenu *fileMenu, *effectMenu, *styleMenu;
+	QAction *fileSrc;
+	QAction *styPencilShading, *styCharcoal, *styPastel, *styPastelColor, *styThresholding;
+	QMenu *fileMenu, *styleMenu;
 
 	// ui control
 	Ui::xdog_guiClass ui;
@@ -43,7 +45,7 @@ private:
 	static const int slider_factor = 1000;
 
 	QLabel *sigmaLabel, *kernelszLabel, *tauLabel, *epsilonLabel, *phiLabel;
-	QLabel *srcLabel0, *srcLabel1, *srcLabel2, *resLabel;
+	QLabel *srcLabel, *resLabel;
 
 	QLineEdit *sigmaEdit, *kernelszEdit, *tauEdit, *epsilonEdit, *phiEdit;
 
@@ -66,17 +68,11 @@ private slots:
 	void loadSrc();
 	void loadTexture();
 	// menu : predefined params
-	void setAbstraction();
-	void setIndication();
-	void setSpeedLine();
-	void setGhosting();
-	void setNegativeEdge();
 	void setPencilShading();
 	void setCharcoal();
 	void setPastel();
 	void setPastelColor();
 	void setThresholding();
-	void setHatching();
 
 	// button
 	void processClicked();// process img
@@ -87,13 +83,6 @@ private slots:
 	void slideTau(int v);
 	void slideEpsilon(int v);
 	void slidePhi(int v);
-
-	// line edit
-	void editSigma(const QString& t);
-	void editKernelSz(const QString& t);
-	void editTau(const QString& t);
-	void editEpsilon(const QString& t);
-	void editPhi(const QString& t);
 };
 
 #endif // XDOG_GUI_H

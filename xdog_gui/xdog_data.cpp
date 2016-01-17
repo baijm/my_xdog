@@ -4,7 +4,7 @@
 XDOG_param::XDOG_param()
 {
 	// standard deviation of Gaussian
-	sigma = 2;
+	sigma = 1;
 	// factor of standard deviations
 	k = 1.6;
 	// size of Gaussian
