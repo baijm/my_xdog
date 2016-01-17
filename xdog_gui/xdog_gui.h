@@ -54,6 +54,7 @@ private:
 	QImage srcQimg, resQimg;
 
 	imatrix src_im;
+	mymatrix fdog_im;
 	ETF etf;
 
 	void createActions();

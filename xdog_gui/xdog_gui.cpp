@@ -137,17 +137,15 @@ xdog_gui::~xdog_gui()
 void xdog_gui::processClicked()
 {
 	// compute DOG based on flow
-	//GetFDoG(src_im, etf, 1.0, 3.0, 0.99); // tao = 0.99
-	//int w = src_mat.cols, h = src_mat.rows;
-	//for int i=0; i<h; i++){
-	//	for(int j=0; j<w; j++){
-	//		dog_mat.at<uchar>(i, j) = src_im.p[i][j];
-	//	}
-	//}
-	//GrayThresholding(src_im, 0.7); // thres = 0.7
-
-	// compute DOG
-	compute_dog(src_mat, dog_mat, param);
+	double curr_sigma = param->getSigma();
+	double curr_tau = param->getTau();
+	GetFDoG(fdog_im, src_im, etf, curr_sigma, 3*curr_sigma, curr_tau); 
+	int w = src_mat.cols, h = src_mat.rows;
+	for(int i=0; i<h; i++){
+		for(int j=0; j<w; j++){
+			dog_mat.at<float>(i, j) = fdog_im.get(i, j);
+		}
+	}
 	// thresholding
 	threshold_dog(dog_mat, res_mat, param);
 	// convert double ->[0, 255]
@@ -318,23 +316,24 @@ void xdog_gui::loadSrc()
 	srcLabel0->resize(srcLabel0->pixmap()->size());
 
 	cv::cvtColor(src_mat, src_mat, CV_BGR2GRAY);
+	// create flow
+	int w = src_mat.cols, h = src_mat.rows;
+	src_im.init(h, w);
+	for(int i=0; i<h; i++){
+		for(int j=0; j<w; j++){
+			src_im.p[i][j] = src_mat.at<uchar>(i,j);
+		}
+	}
+	fdog_im = mymatrix(h, w);
+	etf.init(src_im.getRow(), src_im.getCol());
+	etf.set(src_im);
+	etf.Smooth(4, 2);
+
+
 	src_mat.convertTo(src_mat, CV_32F);
 	src_mat /= MAX_PIX_VAL;
 	dog_mat = cv::Mat::zeros(src_mat.size(), src_mat.type());
 	res_mat = cv::Mat::zeros(src_mat.size(), src_mat.type());
-
-	// FDOG
-	//int w = src_mat.cols, h = src_mat.rows;
-	//src_im = imatrix(h, w);
-	//for(int i=0; i<h; i++){
-	//	for(int j=0; j<w; j++){
-	//		src_im.p[i][j] = src_mat.at<uchar>(i,j);
-	//	}
-	//}
-	// create flow
-	//etf.init(src_im.getRow(), src_im.getCol());
-	//etf.set(src_im);
-	//etf.Smooth(4, 2);
 }
 
 void xdog_gui::loadTexture()

@@ -53,6 +53,15 @@
     <ClCompile Include="xdog_data.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="fdog_main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ETF.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fdog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="xdog_gui.h">
@@ -70,6 +79,18 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="xdog_data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="myvec.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imatrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fdog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ETF.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

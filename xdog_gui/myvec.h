@@ -95,6 +95,18 @@ public:
 			}
 		}
 	}
+	void copy(mymatrix& s){
+		Nr = s.Nr;
+		Nc = s.Nc;
+		p = new double*[Nr];
+		for (int i = 0; i < Nr; i++) {
+			p[i] = new double[Nc];
+			for (int j = 0; j < Nc; j++) {
+				p[i][j] = s[i][j];
+			}
+		}
+	}
+
 	~mymatrix() {
 		delete_all();
 	}

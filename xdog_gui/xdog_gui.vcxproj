@@ -138,6 +138,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ETF.cpp" />
+    <ClCompile Include="fdog.cpp" />
+    <ClCompile Include="fdog_main.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_xdog_gui.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -201,7 +206,11 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ETF.h" />
+    <ClInclude Include="fdog.h" />
     <ClInclude Include="GeneratedFiles\ui_xdog_gui.h" />
+    <ClInclude Include="imatrix.h" />
+    <ClInclude Include="myvec.h" />
     <ClInclude Include="xdog_data.h" />
   </ItemGroup>
   <ItemGroup>

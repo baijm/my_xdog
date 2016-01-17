@@ -209,7 +209,7 @@ void GetFlowDoG(ETF& e, mymatrix& dog, mymatrix& tmp, myvec& GAU3)
 	}
 }
 
-void GetFDoG(imatrix& image, ETF& e, double sigma, double sigma3, double tau) 
+void GetFDoGI(imatrix& image, ETF& e, double sigma, double sigma3, double tau) 
 {
 	int	i, j;
 
@@ -239,105 +239,39 @@ void GetFDoG(imatrix& image, ETF& e, double sigma, double sigma3, double tau)
 		}
 	}
 }
+void GetFDoG(mymatrix& res, imatrix& image, ETF& e, double sigma, double sigma3, double tau)
+{
+	int	i, j;
 
-//void GaussSmoothSep(imatrix& image, double sigma)
-//{
-//	int	i, j;
-//	int MAX_GRADIENT = -1;
-//	double g, max_g, min_g;
-//	int s, t;
-//	int x, y;
-//	double weight, w_sum;
+    int image_x = image.getRow();
+	int image_y = image.getCol();
 
-//	int image_x = image.getRow();
-//	int image_y = image.getCol();
+	myvec GAU1, GAU2, GAU3;
+	MakeGaussianVector(sigma, GAU1); 
+	MakeGaussianVector(sigma*1.6, GAU2); 
 
-//	myvec GAU1;
-//	MakeGaussianVector(sigma, GAU1);
-//	int half = GAU1.getMax()-1;
-
-//	mymatrix tmp(image_x, image_y);
-		
-//	max_g = -1;
-//	min_g = 10000000;
-//	for (j = 0; j < image_y; j++) {
-//		for (i = 0; i < image_x; i++) {
-//			g = 0.0;
-//			weight = w_sum = 0.0;
-//			for (s = -half; s <= half; s++) {
-//				x = i+s; y = j;
-//				if (x > image_x-1) x = image_x-1;
-//				else if (x < 0) x = 0;
-//				if (y > image_y-1) y = image_y-1;
-//				else if (y < 0) y = 0;
-//				weight = GAU1[ABS(s)];
-//				g += weight * image[x][y];
-//				w_sum += weight;
-//			}
-//			g /= w_sum;
-//			if (g > max_g) max_g = g;
-//			if (g < min_g) min_g = g;
-//			tmp[i][j] = g;
-//		}
-//	}
-//	for (j = 0; j < image_y; j++) {
-//		for (i = 0; i < image_x; i++) {
-//			g = 0.0;
-//			weight = w_sum = 0.0;
-//			for (t = -half; t <= half; t++) {
-//					x = i; y = j+t;
-//					if (x > image_x-1) x = image_x-1;
-//					else if (x < 0) x = 0;
-//					if (y > image_y-1) y = image_y-1;
-//					else if (y < 0) y = 0;
-//					weight = GAU1[ABS(t)];
-//					g += weight * tmp[x][y];
-//					w_sum += weight;
-//			}
-//			g /= w_sum;
-//			if (g > max_g) max_g = g;
-//			if (g < min_g) min_g = g;
-//			image[i][j] = round(g);
-//		}
-//	}
+	int half_w1, half_w2, half_l;
+	half_w1 = GAU1.getMax()-1;
+	half_w2 = GAU2.getMax()-1;
 	
-//	TRACE("max_g = %f\n", max_g);
-//	TRACE("min_g = %f\n", min_g);
-//}
+	MakeGaussianVector(sigma3, GAU3); 
+	half_l = GAU3.getMax()-1;
+	
+	mymatrix tmp(image_x, image_y);
+	mymatrix dog(image_x, image_y);
 
-//void ConstructMergedImage(imatrix& image, imatrix& gray, imatrix& merged)
-//{
-//	int x, y;
+	GetDirectionalDoG(image, e, dog, GAU1, GAU2, tau);
+	GetFlowDoG(e, dog, tmp, GAU3);
 
-//	int image_x = image.getRow();
-//	int image_y = image.getCol();
-
-//	for (y = 0; y < image_y; y++) {
-//		for (x = 0; x < image_x; x++) {
-//			if (gray[x][y] == 0) merged[x][y] = 0;
-//			else merged[x][y] = image[x][y];
-//		}
-//	}
-//}
-
-//void ConstructMergedImageMult(imatrix& image, imatrix& gray, imatrix& merged)
-//// using multiplication
-//{
-//	int x, y;
-//	double gray_val, line_darkness;
-
-//	int image_x = image.getRow();
-//	int image_y = image.getCol();
-
-//	for (y = 0; y < image_y; y++) {
-//		for (x = 0; x < image_x; x++) {
-//			gray_val = image[x][y] / 255.0;
-//			line_darkness = gray[x][y] / 255.0;
-//			gray_val *= line_darkness;
-//			merged[x][y] = round(gray_val * 255.0);
-//		}
-//	}
-//}
+	/*
+	for (i = 0; i < image_x; i++) { 
+		for (j = 0; j < image_y; j++) {
+			image[i][j] = round(tmp[i][j] * 255.);
+		}
+	}
+	*/
+	res.copy(tmp);
+}
 
 void Binarize(imatrix& image, double thres) 
 {
